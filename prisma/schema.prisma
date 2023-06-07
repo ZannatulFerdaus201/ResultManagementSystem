@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+model User {
+  id        String      @id @default(uuid())
+  email     String   @unique
+  name      String
+  studentId String    @unique
+  password  String
+  role    UserRole   @default(STUDENT)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  results   Result[]
+  application Applicaion[]
+
+}
+model Applicaion {
+  id String @id @default(uuid())
+  title String
+  message String
+  StudentId String 
+  student   User     @relation(fields: [StudentId], references: [studentId])
+   createdAt DateTime @default(now())
+   updatedAt DateTime @updatedAt
+
+
+}
+model Course {
+  id        String      @id @default(uuid())
+  name      String
+  courseCode String
+  credit    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+ 
+}
+model Result {
+  id        String      @id @default(uuid())
+  courseCode String 
+  courseName String 
+  credit String
+  StudentId String    
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  student   User     @relation(fields: [StudentId], references: [studentId])
+  semester  String 
+  gpa      String
+}
+enum UserRole {
+  ADMIN
+  STUDENT
+}
+
